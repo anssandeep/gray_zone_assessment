@@ -20,7 +20,7 @@ def evaluate_model(model: torch.nn.Module,
     """ Evaluate model on test set. """
     best_model_path = os.path.join(output_path, "best_metric_model.pth")
 
-    model.load_state_dict(torch.load(best_model_path, map_location=device))
+    model.load_state_dict(torch.load(best_model_path, map_location=device)['state_dict'])
     model.eval()
     images = []
     y_pred = []

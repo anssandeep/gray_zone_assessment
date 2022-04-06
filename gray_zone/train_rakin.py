@@ -113,11 +113,19 @@ def train(model: [torch.Tensor],
             metric_values.append(metric_value)
 
             # If validation metric improves, save model
+            # ['epoch', 'arch', 'state_dict', 'optimizer', 'version', 'args', 'amp_scaler', 'metric']
             if metric_value > best_metric:
                 best_metric = metric_value
                 best_metric_epoch = epoch + 1
-                torch.save(model.state_dict(), os.path.join(
-                    output_path, "best_metric_model.pth"))
+                #torch.save(model.state_dict(), os.path.join(
+                #    output_path, "best_metric_model.pth"))
+                torch.save({
+                    'epoch': epoch,
+                    'state_dict': model.state_dict(),
+                    'optimizer': optimizer.state_dict(),
+                    'metric': metric_value
+                     }, os.path.join(output_path, f"best_metric_model.pth"))
+
                 print("saved new best metric model")
             print(
                 f"current epoch: {epoch + 1} current {val_metric}: {metric_value:.4f}"
@@ -126,8 +134,14 @@ def train(model: [torch.Tensor],
                 f" at epoch: {best_metric_epoch}"
             )
             # Save checkpoint
-            torch.save(model.state_dict(), os.path.join(
-                output_path, "checkpoints", f"checkpoint{epoch}.pth"))
+            #torch.save(model.state_dict(), os.path.join(
+            #    output_path, "checkpoints", f"checkpoint{epoch}.pth"))
+            torch.save({
+                 'epoch': epoch,
+                 'state_dict': model.state_dict(),
+                 'optimizer': optimizer.state_dict(),
+                 'metric': metric_value
+                  }, os.path.join(output_path, "checkpoints", f"checkpoint{epoch}.pth"))
 
     if make_plots:
         train_loss_values = epoch_loss_values

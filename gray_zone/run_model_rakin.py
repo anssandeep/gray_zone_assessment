@@ -85,7 +85,8 @@ def _run_model(output_path: str,
                            transfer_learning=transfer_learning,
                            img_dim=img_dim)
 
-    optimizer = torch.optim.Adam(model.parameters(), param_dict['lr'])
+    #optimizer = torch.optim.Adam(model.parameters(), param_dict['lr'])
+    optimizer = torch.optim.RAdam(model.parameters(), param_dict['lr'])
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.1, patience=10, verbose=True)
     loss_function = get_loss(param_dict['loss'], param_dict['n_class'], param_dict['foc_gamma'], param_dict['foc_kappa_adjustment'],
                             param_dict['foc_coeff'], param_dict['kappa_coeff'], param_dict['is_weighted_loss'], weights, param_dict['device']) 
@@ -123,7 +124,7 @@ def _run_model(output_path: str,
                                 image_colname=image_colname,
                                 suffix=suffix)
             is_ordinal = param_dict['model_type'] == 'ordinal'
-            process_output(output_path, is_ordinal, "predictions" + suffix + ".csv", n_class=param_dict['n_class'])
+            process_output(output_path, is_ordinal, "predictions" + suffix + ".csv")
 
 ########################################################################################################
 # Class to ensure that --test flag is always accompanied by the --num-class flag i.e. mutually inclusive
